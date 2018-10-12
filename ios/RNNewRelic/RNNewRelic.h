@@ -6,7 +6,7 @@
 //  Copyright © 2016 Wix.com. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 #import <React/RCTBridgeModule.h>
 #import <NewRelicAgent/NewRelic.h>
 
