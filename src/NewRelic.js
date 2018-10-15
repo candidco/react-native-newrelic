@@ -44,8 +44,8 @@ class NewRelic {
     const defaultHandler =
       (errorUtils.getGlobalHandler && errorUtils.getGlobalHandler()) || errorUtils._globalHandler;
 
-    ErrorUtils.setGlobalHandler(function(error, isFatal) {
-      if (isFatal && !global.__DEV__) {
+    errorUtils.setGlobalHandler(function(error, isFatal) {
+      if (!__DEV__) {
         this.send('JS:UncaughtException', {error, stack: error && error.stack});
         this.nativeLog('JS:UncaughtException' + {error, stack: error && error.stack});
         defaultHandler(error, isFatal);
