@@ -41,11 +41,16 @@ class NewRelic {
   }
 
   _reportUncaughtExceptions(errorUtils = global.ErrorUtils) {
-    const defaultHandler = errorUtils._globalHandler;
-    errorUtils._globalHandler = (error) => {
-      this.send('JS:UncaughtException', {error, stack: error && error.stack});
-      defaultHandler(error);
-    };
+    const defaultHandler =
+      (errorUtils.getGlobalHandler && errorUtils.getGlobalHandler()) || errorUtils._globalHandler;
+
+    errorUtils.setGlobalHandler(function(error, isFatal) {
+      if (!__DEV__) {
+        this.send('JS:UncaughtException', {error, stack: error && error.stack});
+        this.nativeLog('JS:UncaughtException' + {error, stack: error && error.stack});
+        defaultHandler(error, isFatal);
+      }
+    });
   }
 
   _reportRejectedPromises() {
